@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 """ Starts a flask web application """
 
+
 from flask import Flask
 from flask import render_template
+
 
 app = Flask(__name__)
 
@@ -36,19 +38,20 @@ def python_flask(text):
     text = text.replace('_', ' ')
     return 'Python %s' % text
 
+
 @app.route('/number/<int:n>', strict_slashes=False)
 def number_flask(n):
     """ display number """
     if type(n) == int:
         return '%i is a number' % n
 
-    
+
 @app.route('/number_template/<int:n>', strict_slashes=False)
 def template_flask(n):
     """ returns html template with a number """
     if type(n) == int:
         return render_template('5-number.html', n=n)
-    
-    
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
