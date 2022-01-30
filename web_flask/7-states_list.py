@@ -1,73 +1,64 @@
 #!/usr/bin/python3
-""" Starts a flask web application """
+''' flask web application for task 3
+    0x04. AirBnB clone - Web framework
+'''
 
-
-from flask import Flask
-from flask import render_template
+from flask import Flask, escape, render_template
 from models import storage
 from models.state import State
-
 
 
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def hello_hbtn():
-    """ returns a hello string to holberton """
+def hello():
+    '''returns a hello message'''
     return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
-def hello_holberton():
-    """ returns holberton """
+def hbnb():
+    '''returns a hello message'''
     return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def hello_c(text):
-    """ returns string text after replacing underscores with spaces """
-    words = "C "
-    words += text.replace('_', ' ')
-    return words
+def ctext(text):
+    '''returns a test message'''
+    return 'C {}'.format(escape(text).replace('_', ' '))
 
 
-@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def python_flask(text):
-    """ returns text after replacing underscores with spaces,
-        default = 'is cool'
-    """
-    text = text.replace('_', ' ')
-    return 'Python %s' % text
+def pythontext(text='is cool'):
+    '''returns a test message'''
+    return 'Python {}'.format(escape(text).replace('_', ' '))
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
-def number_flask(n):
-    """ display number """
-    if type(n) == int:
-        return '%i is a number' % n
+def numberRoute(n):
+    '''returns a test message'''
+    return '{} is a number'.format(n)
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
-def template_flask(n):
-    """ returns html template with a number """
-    if type(n) == int:
-        return render_template('5-number.html', n=n)
+def templateRoute(n):
+    '''returns a test template'''
+    return render_template('5-number.html', number=n)
 
 
 @app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def odd_or_flask(n):
-    """ returns html template with a number """
-    if type(n) == int:
-        return render_template('6-number_odd_or_even.html', n=n)
+def template_odd_even_Route(n):
+    '''returns a test template'''
+    return render_template('6-number_odd_or_even.html', number=n)
 
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """ lists all states """
-    states = storage.all(State)
-    return render_template('7-state_list.html', states=states)
+    '''lists available states'''
+    states = storage.all(State).values()
+    return render_template('7-states_list.html', states=states)
 
 
 @app.teardown_appcontext
@@ -75,6 +66,5 @@ def teardown_app(exception):
     '''teardown the app , closes current sqlalchemy session'''
     storage.close()
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host="0.0.0.0", port=5000)
